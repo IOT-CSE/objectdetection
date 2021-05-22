@@ -24,26 +24,17 @@ OUTPUT_FILE='output.mp4'
 OUTPUT_CODEC='mp4v'
 LABELS_FILE='coco.names'
 CONFIG_FILE='yolov3.cfg'
-
-#Pretrained weights of yolo.
-
 WEIGHTS_FILE='yolov3.weights' 
 #WEIGHTS_FILE='yolov3-tiny.weights'
-CONFIDENCE_THRESHOLD=0.3
 
-#Just for debugging 
+CONFIDENCE_THRESHOLD=0.3
 DEBUG_MODE = False
 
-H=None
-W=None
-
-#Distance to object = (Real object height*Focal Length)/Object height sensor mm
-#Real object heigh = Distance to object* Object height on sensor / Focal length
-## Calculate height of each person 
+H_OUT=800
+W_OUT=600
 
 FOCAL_LENGTH = 3.5
 OBJECT_HEIGHT = 170
-
 
 def yoloenv_setup():
 	LABELS = open(LABELS_FILE).read().strip().split("\n")
@@ -130,10 +121,10 @@ def detect_from_image(image):
 				0.5, color, 2)
 	# show the output image
 	if DEBUG_MODE:
-		cv2.imshow("output", cv2.resize(image,(800, 600)))
+		cv2.imshow("output", cv2.resize(image,(H_OUT, W_OUT)))
 	return image,len(idxs)
 
-def videostream():
+def video_detection():
 	fps = FPS().start()
 	vs = cv2.VideoCapture(INPUT_FILE)
 
@@ -150,7 +141,7 @@ def videostream():
 	#Output video properties
 	fourcc = cv2.VideoWriter_fourcc(*"mp4v")
 	writer = cv2.VideoWriter(OUTPUT_FILE, fourcc, 30,
-	(800, 600), True)
+	(H_OUT, W_OUT), True)
 	while frame_number <= frame_count:
 		frame_number += frame_speedup 
 		vs.set(cv2.CAP_PROP_POS_FRAMES, frame_number)
@@ -160,7 +151,7 @@ def videostream():
 			print("No frame grabbed, exiting..")
 			break
 		img_result, n_idx = detect_from_image(image)
-		writer.write(cv2.resize(img_result,(800, 600)))
+		writer.write(cv2.resize(img_result,(H_OUT, W_OUT)))
 		if n_idx < 4:
   			frame_speedup = 5 - n_idx
 		else:
@@ -175,4 +166,4 @@ def videostream():
 	vs.release()
 	
 if __name__ == '__main__':
-    videostream()
+    video_detection()
