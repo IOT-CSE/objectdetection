@@ -1,7 +1,6 @@
-shoppingcenter.mp4
 yolov3.weights
 yolov3-tiny.weights
-/objectdetection
 *.avi
 *.swp
 *.mp4
+__pycache__/
