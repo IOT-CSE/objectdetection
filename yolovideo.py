@@ -49,7 +49,7 @@ def detect():
 	frame_speedup = 1
 	
 	#Output video properties
-	fourcc = cv2.VideoWriter_fourcc(*"mp4v")
+	fourcc = cv2.VideoWriter_fourcc(*OUTPUT_CODEC)
 	writer = cv2.VideoWriter(OUTPUT_FILE, fourcc, 30,
 	(H_OUT, W_OUT), True)
 	while frame_number <= frame_count:
